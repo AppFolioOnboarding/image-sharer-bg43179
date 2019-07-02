@@ -1,0 +1,6 @@
+<h1>Images</h1>
+
+<%= simple_form_for @image do |f| %>
+    <%= f.input :image_url, label: 'Image url', error: 'Please enter a valid url with image file extension'%>
+    <%= f.button :submit %>
+<% end %>
