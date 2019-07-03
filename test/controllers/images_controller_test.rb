@@ -38,6 +38,7 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select 'p', 'Image:'
     assert_select 'img[src="https://image.png"]'
+    assert_select 'img[class="image-adjusted"]', count: 1
   end
 
   test 'should display all images in db' do
