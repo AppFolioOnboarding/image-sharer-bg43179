@@ -17,10 +17,13 @@ class ImagesController < ApplicationController
     @image = Image.find(params[:id])
   end
 
+  def index
+    @images = Image.order('created_at DESC')
+  end
 
   private
-    def image_params
-      params.require(:image).permit(:image_url)
-    end
-end
 
+  def image_params
+    params.require(:image).permit(:image_url)
+  end
+end

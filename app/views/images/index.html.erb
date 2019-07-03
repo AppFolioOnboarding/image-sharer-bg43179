@@ -1,0 +1,11 @@
+<h1>Listing images</h1>
+
+<table>
+  <% @images.each do |image| %>
+    <tr>
+      <td>ID: <%= image.id %> </td>
+      <td>created_at: <%= image.created_at %> </td>
+      <td><%= image_tag image.image_url, class: 'image-adjusted'%></td>
+    </tr>
+  <% end %>
+</table>
