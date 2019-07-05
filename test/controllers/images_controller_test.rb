@@ -54,14 +54,23 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should display all images in db' do
-    Image.create!([{ image_url: 'https://image.png' },
-                   { image_url: 'https://andrew.jpg' },
-                   { image_url: 'https://darren.jpeg' }])
+    Image.create!([{ image_url: 'https://image.png', tag_list: 'pikachu' },
+                   { image_url: 'https://andrew.jpg', tag_list: 'man' },
+                   { image_url: 'https://darren.jpeg', tag_list: 'handsome' }])
 
     get images_url
 
     assert_response :success
     assert_select 'img[class="image-adjusted"]', count: 3
+
+    assert_select 'td' do |item|
+      assert_equal 'handsome', item[0].at('label').text
+      assert_equal 'https://darren.jpeg', item[1].at('img')['src']
+      assert_equal 'man', item[2].at('label').text
+      assert_equal 'https://andrew.jpg', item[3].at('img')['src']
+      assert_equal 'pikachu', item[4].at('label').text
+      assert_equal 'https://image.png', item[5].at('img')['src']
+    end
   end
 
   test 'should display image ordered by created time' do
