@@ -51,6 +51,8 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select 'label[class="btn btn-light"]', text: 'pikachu'
     assert_select 'label[class="btn btn-light"]', text: 'pokemon'
+    assert_select 'a[href="/images?tag=pikachu"]', test: 'pikachu'
+    assert_select 'a[href="/images?tag=pokemon"]', test: 'pokemon'
   end
 
   test 'should display all images in db' do
