@@ -31,7 +31,7 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
-  test 'should show page with image' do
+  test 'should show page with image having no tags' do
     @image = Image.create!(image_url: 'https://image.png')
 
     get image_path(@image.id)
@@ -40,6 +40,17 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     assert_select 'p', 'Image:'
     assert_select 'img[src="https://image.png"]'
     assert_select 'img[class="image-adjusted"]', count: 1
+    assert_select 'label[class="btn btn-light"]', count: 0
+  end
+
+  test 'should show page with image having tags' do
+    @image = Image.create!(image_url: 'https://image.png', tag_list: 'pikachu, pokemon')
+
+    get image_path(@image.id)
+
+    assert_response :success
+    assert_select 'label[class="btn btn-light"]', text: 'pikachu'
+    assert_select 'label[class="btn btn-light"]', text: 'pokemon'
   end
 
   test 'should display all images in db' do
