@@ -3,8 +3,11 @@
 <table>
   <% @images.each do |image| %>
     <tr>
-      <td>ID: <%= image.id %> </td>
-      <td>created_at: <%= image.created_at %> </td>
+      <td> Tags:
+          <% image.tag_list.each do |tag| %>
+          <label class="btn btn-light"><%= tag %></label>
+          <% end %>
+      </td>
       <td><%= image_tag image.image_url, class: 'image-adjusted'%></td>
     </tr>
   <% end %>
