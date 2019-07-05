@@ -89,4 +89,32 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
       assert_equal 'https://image.png', elements[2].attr('src')
     end
   end
+
+  test 'should only display images related to selected tag' do
+    Image.create!([{ image_url: 'https://image.png', tag_list: 'pikachu' },
+                   { image_url: 'https://andrew.jpg', tag_list: 'pikachu' },
+                   { image_url: 'https://darren.jpeg', tag_list: 'handsome' }])
+
+    get images_path(tag: 'pikachu')
+
+    assert_response :success
+    assert_select 'a[href="/images?tag=pikachu"]', count: 2
+    assert_select 'a[href="/images?tag=man"]', count: 0
+    assert_select 'a[href="/iamges?tag=handsome"]', count: 0
+    assert_select 'img[class="image-adjusted"]' do |elements|
+      assert_equal 'https://andrew.jpg', elements[0].attr('src')
+      assert_equal 'https://image.png', elements[1].attr('src')
+    end
+  end
+
+  test 'should display nothing if the tag is not existing' do
+    Image.create!([{ image_url: 'https://image.png', tag_list: 'pikachu' },
+                   { image_url: 'https://andrew.jpg', tag_list: 'man' },
+                   { image_url: 'https://darren.jpeg', tag_list: 'handsome' }])
+
+    get images_path(tag: 'kevin')
+
+    assert_select 'label[class="btn btn-light"]', count: 0
+    assert_select 'img[class="image-adjusted"]', count: 0
+  end
 end
