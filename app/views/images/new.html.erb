@@ -2,5 +2,6 @@
 
 <%= simple_form_for @image do |f| %>
     <%= f.input :image_url, label: 'Image url', error: 'Please enter a valid url with image file extension'%>
+    <%= f.input :tag_list,label: 'Add tag' %>
     <%= f.button :submit %>
 <% end %>
