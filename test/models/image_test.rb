@@ -17,4 +17,9 @@ class ImageTest < ActiveSupport::TestCase
     refute @image.valid?
     assert_equal ['Image url is invalid'], @image.errors.full_messages
   end
+
+  test 'Tag is attached to image created' do
+    @image = Image.new(image_url: 'https://image.png', tag_list: 'pikachu')
+    assert_equal 'pikachu', @image.tag_list[0]
+  end
 end
