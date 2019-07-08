@@ -1,5 +1,9 @@
 <h1>Listing images</h1>
 
+<% if flash[:notice] %>
+  <div class="alert alert-success"><%= flash[:notice] %></div>
+<% end %>
+
 <table>
   <% @images.each do |image| %>
     <tr>
@@ -8,7 +12,12 @@
           <label class="btn btn-light"><%= link_to tag, images_path(tag: tag) %></label>
           <% end %>
       </td>
-      <td><%= image_tag image.image_url, class: 'image-adjusted'%></td>
+      <td>
+        <%= image_tag image.image_url, class: 'image-adjusted'%>
+      </td>
+      <td>
+        <label class="js-delete-btn"><%= link_to 'Delete', image_path(image.id), method: :delete,  data: {confirm: 'Are you sure?'} %></label>
+      </td>
     </tr>
   <% end %>
 </table>

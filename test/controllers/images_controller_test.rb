@@ -64,14 +64,20 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select 'img[class="image-adjusted"]', count: 3
+    assert_select 'a[data-method="delete"]', count: 3, text: 'Delete'
 
     assert_select 'td' do |item|
       assert_equal 'handsome', item[0].at('label').text
       assert_equal 'https://darren.jpeg', item[1].at('img')['src']
-      assert_equal 'man', item[2].at('label').text
-      assert_equal 'https://andrew.jpg', item[3].at('img')['src']
-      assert_equal 'pikachu', item[4].at('label').text
-      assert_equal 'https://image.png', item[5].at('img')['src']
+      assert_equal '/images/3', item[2].at('a')['href']
+
+      assert_equal 'man', item[3].at('label').text
+      assert_equal 'https://andrew.jpg', item[4].at('img')['src']
+      assert_equal '/images/2', item[5].at('a')['href']
+
+      assert_equal 'pikachu', item[6].at('label').text
+      assert_equal 'https://image.png', item[7].at('img')['src']
+      assert_equal '/images/1', item[8].at('a')['href']
     end
   end
 
@@ -118,5 +124,21 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
 
     assert_select 'label[class="btn btn-light"]', count: 0
     assert_select 'img[class="image-adjusted"]', count: 0
+  end
+
+  test 'should remove image from db if delete btn is clicked' do
+    Image.create!([{ image_url: 'https://image.png', tag_list: 'pikachu' },
+                   { image_url: 'https://andrew.jpg', tag_list: 'pikachu' },
+                   { image_url: 'https://darren.jpeg', tag_list: 'handsome' }])
+
+    assert_difference 'Image.count', -1 do
+      delete image_path(Image.last.id)
+    end
+
+    assert_redirected_to images_path
+    assert_response :redirect
+
+    assert_equal 'https://andrew.jpg', Image.last.image_url
+    assert_equal 2, Image.count
   end
 end
